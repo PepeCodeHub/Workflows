@@ -16,7 +16,7 @@ jobs:
         ## What's New
         - Custom release notes for version `${{ github.ref_name }}`
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ORG_PAT: ${{ secrets.ORG_PAT }}
 
   upload-assets:
     needs: create-release
@@ -26,4 +26,4 @@ jobs:
       asset_path: './workflows.zip'
       asset_name: 'workflows.zip'
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ORG_PAT: ${{ secrets.ORG_PAT }}

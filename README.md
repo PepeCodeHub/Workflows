@@ -15,7 +15,7 @@ This workflow automates the process of creating a GitHub release. It can be reus
 
 #### Secrets
 
-- `GITHUB_TOKEN` (required): GitHub token for authentication. 🔑
+- `ORG_PAT` (required): GitHub token for authentication. 🔑
 
 #### Jobs
 
@@ -40,7 +40,7 @@ jobs:
             release_name: Release ${{ github.ref }}
             release_body: "Release notes for ${{ github.ref }}"
         secrets:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ORG_PAT: ${{ secrets.ORG_PAT }}
 ```
 
 ### Reusable Docker Publish Workflow

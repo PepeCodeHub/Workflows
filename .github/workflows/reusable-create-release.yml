@@ -19,7 +19,7 @@ on:
         default: ''
 
     secrets:
-      GITHUB_TOKEN:
+      ORG_PAT:
         required: true
 
 jobs:
@@ -54,7 +54,7 @@ jobs:
 
           # Create the release using GitHub REST API with curl
           curl -X POST $API_URL \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.ORG_PAT }}" \
             -H "Content-Type: application/json" \
             -d "{
               \"tag_name\": \"$TAG_NAME\",

@@ -17,7 +17,7 @@ on:
         type: string
 
     secrets:
-      GITHUB_TOKEN:
+      ORG_PAT:
         required: true
 
 jobs:
@@ -39,12 +39,12 @@ jobs:
 
           # Get the release ID by querying the release for the given tag
           RELEASE_ID=$(curl -s \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.ORG_PAT }}" \
             https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME | jq -r ".id")
 
           # Upload the asset to the release
           curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Authorization: token ${{ secrets.ORG_PAT }}" \
             -H "Content-Type: $(file --mime-type -b "$ASSET_PATH")" \
             --data-binary @"$ASSET_PATH" \
             "https://uploads.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets?name=$ASSET_NAME"
