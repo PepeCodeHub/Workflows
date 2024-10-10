@@ -1,0 +1,65 @@
+name: Reusable Create GitHub Release Workflow
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: 'The Git tag name for the release (e.g., v1.0.0)'
+        required: true
+        type: string
+      release_name:
+        description: 'The name of the release (e.g., Release v1.0.0)'
+        required: false
+        type: string
+        default: ''
+      release_body:
+        description: 'The body of the release notes'
+        required: false
+        type: string
+        default: ''
+
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Create a release via the GitHub REST API
+      - name: Create GitHub Release
+        run: |
+          TAG_NAME=${{ inputs.tag_name }}
+          RELEASE_NAME=${{ inputs.release_name }}
+          RELEASE_BODY=${{ inputs.release_body }}
+
+          # If release name is empty, use the tag name as the release name
+          if [ -z "$RELEASE_NAME" ]; then
+            RELEASE_NAME="Release $TAG_NAME"
+          fi
+
+          # If release body is empty, use a default message
+          if [ -z "$RELEASE_BODY" ]; then
+            RELEASE_BODY="## What's New\n\nAutomatic release for version $TAG_NAME"
+          fi
+
+          # GitHub API endpoint for creating a release
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases"
+
+          # Create the release using GitHub REST API with curl
+          curl -X POST $API_URL \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"tag_name\": \"$TAG_NAME\",
+              \"name\": \"$RELEASE_NAME\",
+              \"body\": \"$RELEASE_BODY\",
+              \"draft\": false,
+              \"prerelease\": false
+            }"

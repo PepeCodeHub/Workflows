@@ -1,0 +1,50 @@
+name: Reusable Upload Assets to GitHub Release Workflow
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: 'The Git tag name for the release (e.g., v1.0.0)'
+        required: true
+        type: string
+      asset_path:
+        description: 'The path to the asset file to upload'
+        required: true
+        type: string
+      asset_name:
+        description: 'The name of the asset file for the release'
+        required: true
+        type: string
+
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  upload-assets:
+    name: Upload Assets to GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Upload the asset to the release
+      - name: Upload Assets
+        run: |
+          TAG_NAME=${{ inputs.tag_name }}
+          ASSET_PATH=${{ inputs.asset_path }}
+          ASSET_NAME=${{ inputs.asset_name }}
+
+          # Get the release ID by querying the release for the given tag
+          RELEASE_ID=$(curl -s \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME | jq -r ".id")
+
+          # Upload the asset to the release
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: $(file --mime-type -b "$ASSET_PATH")" \
+            --data-binary @"$ASSET_PATH" \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets?name=$ASSET_NAME"
