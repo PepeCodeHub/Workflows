@@ -15,6 +15,15 @@ on:
         description: 'The name of the asset file for the release'
         required: true
         type: string
+      asset_content_type:
+        description: 'The content type of the asset file for the release'
+        required: true
+        type: string
+      upload_url:
+        description: 'The URL to upload the asset to'
+        required: true
+        type: string
+
 
     secrets:
       ORG_PAT:
@@ -28,23 +37,16 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Upload the asset to the release
-      - name: Upload Assets
-        run: |
-          TAG_NAME=${{ inputs.tag_name }}
-          ASSET_PATH=${{ inputs.asset_path }}
-          ASSET_NAME=${{ inputs.asset_name }}
-
-          # Get the release ID by querying the release for the given tag
-          RELEASE_ID=$(curl -s \
-            -H "Authorization: token ${{ secrets.ORG_PAT }}" \
-            https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME | jq -r ".id")
-
-          # Upload the asset to the release
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.ORG_PAT }}" \
-            -H "Content-Type: $(file --mime-type -b "$ASSET_PATH")" \
-            --data-binary @"$ASSET_PATH" \
-            "https://uploads.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID/assets?name=$ASSET_NAME"
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT }}
+        with:
+          upload_url: ${{ inputs.upload_url }}
+          asset_path: ${{ inputs.asset_path }}
+          asset_name: ${{ inputs.asset_name }}
+          asset_content_type: ${{ inputs.asset_content_type }}
