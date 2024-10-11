@@ -1,0 +1,51 @@
+name: Reusable Create Release Workflow
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: 'The Git tag name for the release (e.g., v1.0.0)'
+        required: true
+        type: string
+      release_name:
+        description: 'The name of the release (e.g., Release v1.0.0)'
+        required: false
+        type: string
+        default: ''
+      release_body:
+        description: 'The body of the release notes'
+        required: false
+        type: string
+        default: ''
+
+    secrets:
+      ORG_PAT:
+        required: true
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    outputs:
+      upload_url:
+      description: 'The upload URL for the release'
+      value: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Create a release via the GitHub REST API
+      - id: create_release
+        name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_PAT }}
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          release_name: ${{ inputs.release_name }}
+          body: ${{ inputs.release_body }}
+          draft: false
+          prerelease: false
