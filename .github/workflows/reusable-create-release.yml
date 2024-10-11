@@ -35,10 +35,11 @@ jobs:
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
+    
     outputs:
       release_url:
       description: 'The URL of the created release'
-      value: ${{ steps.create_release.outputs.html_url }}
+      value: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
       # Step 1: Checkout the repository
