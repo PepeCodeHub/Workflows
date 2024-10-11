@@ -23,7 +23,9 @@ jobs:
     uses: ./.github/workflows/reusable-upload-assets.yml
     with:
       tag_name: ${{ github.ref_name }}
-      asset_path: './workflows.zip'
+      upload_url: ${{ needs.create-release.outputs.release_url }}
       asset_name: 'workflows.zip'
+      asset_path: './workflows.zip'
+      asset_content_type: 'application/zip'
     secrets:
       ORG_PAT: ${{ secrets.ORG_PAT }}
