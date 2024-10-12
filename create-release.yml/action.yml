@@ -1,26 +1,24 @@
 name: Reusable Create Release Workflow
 
-on:
-  workflow_call:
-    inputs:
-      tag_name:
-        description: 'The Git tag name for the release (e.g., v1.0.0)'
-        required: true
-        type: string
-      release_name:
-        description: 'The name of the release (e.g., Release v1.0.0)'
-        required: false
-        type: string
-        default: ''
-      release_body:
-        description: 'The body of the release notes'
-        required: false
-        type: string
-        default: ''
+inputs:
+  tag_name:
+    description: 'The Git tag name for the release (e.g., v1.0.0)'
+    required: true
+    type: string
+  release_name:
+    description: 'The name of the release (e.g., Release v1.0.0)'
+    required: false
+    type: string
+    default: ''
+  release_body:
+    description: 'The body of the release notes'
+    required: false
+    type: string
+    default: ''
 
-    secrets:
-      ORG_PAT:
-        required: true
+secrets:
+  ORG_PAT:
+    required: true
 
 jobs:
   create-release:
@@ -29,8 +27,8 @@ jobs:
 
     outputs:
       upload_url:
-      description: 'The upload URL for the release'
-      value: ${{ steps.create_release.outputs.upload_url }}
+        description: 'The upload URL for the release'
+        value: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
       # Step 1: Checkout the repository
