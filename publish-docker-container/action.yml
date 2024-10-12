@@ -21,6 +21,8 @@ env:
 runs:
   using: "composite"
   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Build Docker image
       uses: ./build-docker-container
