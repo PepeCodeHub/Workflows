@@ -20,5 +20,4 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
           release_body: 'Release ${{ github.ref }}'
-        env:
           ORG_PAT: ${{ secrets.ORG_PAT }}

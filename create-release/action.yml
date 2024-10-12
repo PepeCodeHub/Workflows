@@ -14,8 +14,6 @@ inputs:
     description: "The body of the release notes"
     required: false
     default: ""
-
-secrets:
   ORG_PAT:
     description: "The GitHub Personal Access Token for the organization"
     required: true
