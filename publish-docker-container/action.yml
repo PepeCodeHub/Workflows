@@ -34,13 +34,16 @@ runs:
         password: ${{ env.DOCKERHUB_TOKEN }}
 
     - name: Build Docker image
+      shell: bash
       run: |
         docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:${{ github.sha }} .
         docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:${{ github.sha }} ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:latest
 
     - name: Push Docker image to Docker Hub
+      shell: bash
       run: |
         docker push ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:${{ github.sha }}
+        docker push ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:latest
         docker push ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:latest
 
     - name: Log in to GitHub Container Registry
@@ -50,13 +53,18 @@ runs:
         password: ${{ env.GHCR_TOKEN }}
 
     - name: Tag Docker image for GHCR
+      shell: bash
       run: |
         IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image_name }}"
         docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:${{ github.sha }} $IMAGE_NAME:${{ github.sha }}
         docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:latest
 
     - name: Push Docker image to GitHub Container Registry
+      shell: bash
       run: |
+        IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image_name }}"
+        docker push $IMAGE_NAME:${{ github.sha }}
+        docker push $IMAGE_NAME:latest
         IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ inputs.docker_image_name }}"
         docker push $IMAGE_NAME:${{ github.sha }}
         docker push $IMAGE_NAME:latest
