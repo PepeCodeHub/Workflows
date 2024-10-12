@@ -8,12 +8,17 @@ on:
 
 jobs:
   create-release:
-    uses: ./.github/workflows/reusable-create-release.yml
-    with:
-      tag_name: ${{ github.ref_name }}
-      release_name: 'Release ${{ github.ref_name }}'
-      release_body: |
-        ## What's New
-        - Custom release notes for version `${{ github.ref_name }}`
-    secrets:
-      ORG_PAT: ${{ secrets.ORG_PAT }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        id: create_release
+        uses: ./create-release.yml
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          release_body: 'Release ${{ github.ref }}'
+        env:
+          ORG_PAT: ${{ secrets.ORG_PAT }}

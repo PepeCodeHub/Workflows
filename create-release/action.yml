@@ -15,6 +15,11 @@ inputs:
     required: false
     default: ""
 
+secrets:
+  ORG_PAT:
+    description: "The GitHub Personal Access Token for the organization"
+    required: true
+
 outputs:
   upload_url:
     description: "The upload URL for the release"
