@@ -15,7 +15,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: ./create-release.yml
+        uses: ./create-release
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
