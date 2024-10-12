@@ -1,0 +1,22 @@
+name: "Build Docker Image"
+description: "Builds a Docker image and tags it with the commit SHA"
+
+inputs:
+  docker_image_name:
+    description: "The name of the Docker image to build"
+    required: true
+    type: string
+
+env:
+  DOCKERHUB_USERNAME:
+    description: "Docker Hub username for tagging the image"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Build Docker image
+      shell: bash
+      run: |
+        docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:${{ github.sha }} .
+        docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:${{ github.sha }} ${{ env.DOCKERHUB_USERNAME }}/${{ inputs.docker_image_name }}:latest
