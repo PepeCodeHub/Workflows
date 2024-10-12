@@ -14,9 +14,11 @@ inputs:
     description: "The body of the release notes"
     required: false
     default: ""
-  PAT:
-    description: "The GitHub Personal Access Token for the organization"
-    required: true
+
+  env:
+    GITHUB_TOKEN:
+      description: "The GitHub Personal Access Token for the organization"
+      required: true
 
 outputs:
   upload_url:
@@ -31,11 +33,11 @@ runs:
       uses: actions/checkout@v4
 
     # Step 2: Create a release via the GitHub REST API
-    - id: create_release
-      name: Create GitHub Release
+    - name: Create GitHub Release
+      id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ inputs.PAT }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
       with:
         tag_name: ${{ inputs.tag_name }}
         release_name: ${{ inputs.release_name}}
