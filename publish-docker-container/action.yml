@@ -1,5 +1,5 @@
-name: "Reusable Docker Publish Workflow"
-description: "Build and publish Docker images to Docker Hub and GitHub Container Registry."
+name: "Publish Docker Image to Both Docker Hub and GHCR"
+description: "Build and publish Docker images to both Docker Hub and GitHub Container Registry."
 
 inputs:
   docker_image_name:
@@ -25,15 +25,7 @@ runs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Build the Docker image
-    - name: Build Docker image
-      uses: ./build-docker-container
-      with:
-        docker_image_name: ${{ inputs.docker_image_name }}
-      env:
-        DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
-
-    # Step 3: Publish the Docker image to Docker Hub
+    # Step 2: Publish to Docker Hub
     - name: Publish Docker image to Docker Hub
       uses: ./publish-container-docker-hub
       with:
@@ -42,8 +34,8 @@ runs:
         DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
         DOCKERHUB_TOKEN: ${{ env.DOCKERHUB_TOKEN }}
 
-    # Step 4: Publish the Docker image to GitHub Container Registry
-    - name: Publish Docker image to GitHub Container Registry
+    # Step 3: Publish to GitHub Container Registry
+    - name: Publish Docker image to GHCR
       uses: ./publish-container-github
       with:
         docker_image_name: ${{ inputs.docker_image_name }}
