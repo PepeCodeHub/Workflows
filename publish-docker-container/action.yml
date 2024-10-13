@@ -49,6 +49,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
+        password: ${{ env.GHCR_TOKEN }}
 
     # Step 5: Build and push the Docker image to GitHub Container Registry
     - name: Build and push Docker image to GHCR
