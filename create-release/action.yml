@@ -28,11 +28,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-    # Step 1: Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    # Step 2: Create a release via the GitHub REST API
     - name: Create GitHub Release
       id: create_release
       uses: actions/create-release@v1
