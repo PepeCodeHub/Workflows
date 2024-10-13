@@ -21,11 +21,7 @@ env:
 runs:
   using: "composite"
   steps:
-    # Step 1: Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    # Step 2: Publish to Docker Hub
+    # Step 1: Publish to Docker Hub
     - name: Publish Docker image to Docker Hub
       uses: ./publish-container-docker-hub
       with:
@@ -34,7 +30,7 @@ runs:
         DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
         DOCKERHUB_TOKEN: ${{ env.DOCKERHUB_TOKEN }}
 
-    # Step 3: Publish to GitHub Container Registry
+    # Step 2: Publish to GitHub Container Registry
     - name: Publish Docker image to GHCR
       uses: ./publish-container-github
       with:
