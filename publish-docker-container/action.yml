@@ -23,7 +23,7 @@ runs:
   steps:
     # Step 1: Publish to Docker Hub
     - name: Publish to Docker Hub
-      uses: ../publish-container-docker-hub
+      uses: ./publish-container-docker-hub
       with:
         docker_image_name: ${{ inputs.docker_image_name }}
       env:
@@ -32,7 +32,7 @@ runs:
 
     # Step 2: Publish to GitHub Container Registry
     - name: Publish to GitHub Container Registry
-      uses: ../publish-container-github
+      uses: ./publish-container-github
       with:
         docker_image_name: ${{ inputs.docker_image_name }}
       env:
